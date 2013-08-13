@@ -1,4 +1,5 @@
 ﻿@{
+    @model IEnumerable<MATechTaxWebSite.Models.BlobSnapshot>
     ViewBag.Title = "Home Page";
     ViewBag.FaqUrl = System.Configuration.ConfigurationManager.AppSettings["DorFaqUrl"];
 }
@@ -19,11 +20,12 @@
 
 <h3>DOR FAQ HISTORY (Partial)</h3>
 <ol class="round">
-
+    @foreach (var snap in Model)
+    {
     <li class="one">
-        <h4></h4>
+        <h4><a href="@snap.Url">@snap.LastModified</a></h4>
     </li>
-
+    }
 </ol>
 
 

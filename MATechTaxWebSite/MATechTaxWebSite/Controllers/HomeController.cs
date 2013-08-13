@@ -1,5 +1,9 @@
-﻿using System;
+﻿using MATechTaxWebSite.Models;
+using Microsoft.WindowsAzure.Storage.Blob;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,7 +16,45 @@ namespace MATechTaxWebSite.Controllers
         {
             ViewBag.Message = "MA Tech Tax";
 
-            return View();
+            var faqSnapshots = GetFaqSnapshots();
+
+            return View(faqSnapshots);
+        }
+
+        private List<BlobSnapshot> GetFaqSnapshots()
+        {
+            var faqSnapshots = new List<BlobSnapshot>();
+            var valetKeyUrl = ConfigurationManager.AppSettings["BlobValetKeyUrl"];
+            var destinationUrl = ConfigurationManager.AppSettings["BlobDestinationUrl"];
+            var blob = ValetKeyPattern.AzureStorage.BlobContainerValet.GetCloudBlockBlob(valetKeyUrl, new Uri(destinationUrl));
+
+            FetchMeta(blob);
+
+            var blobOptions = Microsoft.WindowsAzure.Storage.Blob.BlobListingDetails.Snapshots;
+            foreach (var blobItem in blob.Container.ListBlobs(prefix: null, useFlatBlobListing: true, blobListingDetails: blobOptions))
+            {
+                var lastModified = String.Empty;
+                var hasLastModified = blob.Metadata.TryGetValue("LastModified", out lastModified);
+                faqSnapshots.Add(new BlobSnapshot()
+                {
+                    LastModified = hasLastModified ? lastModified : "<not captured>",
+                    Url = blobItem.Uri.AbsoluteUri
+                });
+            }
+
+            return faqSnapshots;
+        }
+
+        void FetchMeta(CloudBlockBlob blob)
+        {
+            try
+            {
+                blob.FetchAttributes();
+            }
+            catch (Exception ex)
+            {
+                var foo = ex;
+            }
         }
     }
 }
