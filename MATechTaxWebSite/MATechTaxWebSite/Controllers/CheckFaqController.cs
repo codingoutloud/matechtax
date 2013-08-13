@@ -15,37 +15,39 @@ namespace MATechTaxWebSite.Controllers
         // GET api/checkfaq
         public HttpResponseMessage Get()
         {
+            string httpLastModified = String.Empty;
             try
             {
-                CheckFaq();
+                httpLastModified = CheckFaq();
             }
             catch (Exception ex)
             {
                 var foo = ex;
             }
 
-                return new HttpResponseMessage()
-            {
-                StatusCode = HttpStatusCode.OK
-            };
+            return Request.CreateResponse(HttpStatusCode.OK, httpLastModified);
         }
 
-        private void CheckFaq()
+        private string CheckFaq()
         {
+            var httpLastModified = String.Empty;
             var client = new HttpClient();
+            var faqUrl = ConfigurationManager.AppSettings["DorFaqUrl"];
             var result =
-               client.GetAsync("http://www.mass.gov/dor/docs/dor/law-changes/faqss-computer-software-2013.pdf").Result;
+               client.GetAsync(faqUrl).Result;
             var contents = result.Content.ReadAsByteArrayAsync().Result;
             IEnumerable<string> lastModifiedHeaders;
             if (result.Content.Headers.TryGetValues("Last-Modified", out lastModifiedHeaders))
             {
-                Console.WriteLine("Last-Modified = {0}", lastModifiedHeaders.First());
+                httpLastModified = lastModifiedHeaders.First();
             }
             var thumbprint = GetThumbprint(contents);
             var blobUrl = ConfigurationManager.AppSettings["BlobValetKeyUrl"];
             var blobUri = BlobContainerValet.GetDestinationPathFromValetKey(blobUrl);
 
             WriteToBlobIfChanged(blobUri, thumbprint, contents);
+
+            return httpLastModified;
         }
 
         static string GetThumbprint(byte[] bytes)
