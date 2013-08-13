@@ -25,6 +25,14 @@ namespace MATechTaxWebSite
                 consumerKey: twitterOAuthConsumerKey,
                 consumerSecret: twitterOAuthConsumerSecret);
 
+            var twitterOAuthAccessToken = ConfigurationManager.AppSettings["TwitterOAuthAccessToken"];
+            var twitterOAuthAccessTokenSecret = ConfigurationManager.AppSettings["TwitterOAuthAccessTokenSecret"];
+
+            var tweeter = new TweetSharp.TwitterService(twitterOAuthConsumerKey, twitterOAuthConsumerSecret);
+            tweeter.AuthenticateWith(twitterOAuthAccessToken, twitterOAuthAccessTokenSecret);
+            var status = "The DOR FAQ has been updated: http://matechtax.azurewebsites.net #MATechTax";
+            tweeter.SendTweet(new TweetSharp.SendTweetOptions { Status = status });
+
             //OAuthWebSecurity.RegisterFacebookClient(
             //    appId: "",
             //    appSecret: "");

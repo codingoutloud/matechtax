@@ -94,7 +94,7 @@ namespace MATechTaxWebSite.Controllers
                 var snapshot = blob.CreateSnapshot();
                 WriteBlob(blobUri, thumbprint, contents);
 
-                Console.WriteLine("updated.");
+                TweetThatFaqUpdated();
                 return true;
             }
             else
@@ -103,6 +103,19 @@ namespace MATechTaxWebSite.Controllers
 
                 return false;
             }
+        }
+
+        static void TweetThatFaqUpdated()
+        {
+            var twitterOAuthConsumerKey = ConfigurationManager.AppSettings["TwitterOAuthConsumerKey"];
+            var twitterOAuthConsumerSecret = ConfigurationManager.AppSettings["TwitterOAuthConsumerSecret"];
+            var twitterOAuthAccessToken = ConfigurationManager.AppSettings["TwitterOAuthAccessToken"];
+            var twitterOAuthAccessTokenSecret = ConfigurationManager.AppSettings["TwitterOAuthAccessTokenSecret"];
+
+            var tweeter = new TweetSharp.TwitterService(twitterOAuthConsumerKey, twitterOAuthConsumerSecret);
+            tweeter.AuthenticateWith(twitterOAuthAccessToken, twitterOAuthAccessTokenSecret);
+            var status = "The DOR FAQ has been updated: http://bit.ly/dorfaqhistory #MATechTax";
+            tweeter.SendTweet(new TweetSharp.SendTweetOptions { Status = status });
         }
 
         static void WriteBlob(Uri blobUri, string thumbprint, byte[] contents)
