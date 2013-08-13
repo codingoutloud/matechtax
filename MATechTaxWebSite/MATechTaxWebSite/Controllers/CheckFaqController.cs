@@ -12,28 +12,24 @@ namespace MATechTaxWebSite.Controllers
 {
     public class CheckFaqController : ApiController
     {
-        static string LastModified = null;
-
         // GET api/checkfaq
         public HttpResponseMessage Get()
         {
-            string httpLastModified = String.Empty;
             try
             {
-                httpLastModified = CaptureRecentFaqChanges();
-                LastModified = httpLastModified;
+                var httpLastModified = CaptureRecentFaqChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, httpLastModified);
             }
             catch (Exception ex)
             {
                 var foo = ex;
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.ToString());
             }
-
-            return Request.CreateResponse(HttpStatusCode.OK, httpLastModified);
         }
 
         private string CaptureRecentFaqChanges()
         {
-            var httpLastModified = String.Empty;
+            string httpLastModified = String.Empty;
             var client = new HttpClient();
             var faqUrl = ConfigurationManager.AppSettings["DorFaqUrl"];
             var result =
@@ -44,11 +40,15 @@ namespace MATechTaxWebSite.Controllers
             {
                 httpLastModified = lastModifiedHeaders.First();
             }
+            else
+            {
+                httpLastModified = String.Empty;
+            }
             var thumbprint = GetThumbprint(contents);
             var blobUrl = ConfigurationManager.AppSettings["BlobValetKeyUrl"];
             var blobUri = BlobContainerValet.GetDestinationPathFromValetKey(blobUrl);
 
-            WriteToBlobIfChanged(blobUri, thumbprint, contents);
+            WriteToBlobIfChanged(blobUri, thumbprint, contents, httpLastModified);
 
             return httpLastModified;
         }
@@ -59,7 +59,7 @@ namespace MATechTaxWebSite.Controllers
             return Convert.ToBase64String(data);
         }
 
-        static bool WriteToBlobIfChanged(Uri blobUri, string thumbprint, byte[] contents)
+        static bool WriteToBlobIfChanged(Uri blobUri, string thumbprint, byte[] contents, string httpLastModified)
         {
      //       Console.Write("[thumbprint = {0} ... ", thumbprint);
 
@@ -79,7 +79,7 @@ namespace MATechTaxWebSite.Controllers
                 if (ex.RequestInformation.HttpStatusCode == Convert.ToInt32(HttpStatusCode.NotFound))
                 {
                     // write it the first time
-                    WriteBlob(blobUri, thumbprint, contents);
+                    WriteBlob(blobUri, thumbprint, contents, httpLastModified);
                     Console.WriteLine(" (created)");
                     return true;
                 }
@@ -95,7 +95,7 @@ namespace MATechTaxWebSite.Controllers
                 Console.Write("Change detected: {0}... ", DateTime.Now.ToLongTimeString());
 
                 var snapshot = blob.CreateSnapshot();
-                WriteBlob(blobUri, thumbprint, contents);
+                WriteBlob(blobUri, thumbprint, contents, httpLastModified);
 
                 TweetThatFaqWasUpdated();
                 return true;
@@ -121,7 +121,7 @@ namespace MATechTaxWebSite.Controllers
             tweeter.SendTweet(new TweetSharp.SendTweetOptions { Status = status });
         }
 
-        static void WriteBlob(Uri blobUri, string thumbprint, byte[] contents)
+        static void WriteBlob(Uri blobUri, string thumbprint, byte[] contents, string httpLastModified)
         {
 #if false
          var blob = new CloudBlockBlob(blobUri);
@@ -133,8 +133,8 @@ namespace MATechTaxWebSite.Controllers
             var memstream = new MemoryStream(contents);
             blob.UploadFromStream(memstream);
             blob.Metadata["thumbprint"] = thumbprint;
-            if (!String.IsNullOrEmpty(LastModified)) 
-                blob.Metadata["LastModified"] = LastModified;
+            if (!String.IsNullOrEmpty(httpLastModified)) 
+                blob.Metadata["LastModified"] = httpLastModified;
             blob.SetMetadata();
             blob.Properties.ContentType = ConfigurationManager.AppSettings["BlobDestinationMimeType"];
             blob.SetProperties();
