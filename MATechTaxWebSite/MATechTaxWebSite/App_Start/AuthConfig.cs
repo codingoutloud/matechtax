@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Web.WebPages.OAuth;
 using MATechTaxWebSite.Models;
+using System.Configuration;
 
 namespace MATechTaxWebSite
 {
@@ -18,9 +19,11 @@ namespace MATechTaxWebSite
             //    clientId: "",
             //    clientSecret: "");
 
-            //OAuthWebSecurity.RegisterTwitterClient(
-            //    consumerKey: "",
-            //    consumerSecret: "");
+            var twitterOAuthConsumerKey = ConfigurationManager.AppSettings["TwitterOAuthConsumerKey"];
+            var twitterOAuthConsumerSecret = ConfigurationManager.AppSettings["TwitterOAuthConsumerSecret"];
+            OAuthWebSecurity.RegisterTwitterClient(
+                consumerKey: twitterOAuthConsumerKey,
+                consumerSecret: twitterOAuthConsumerSecret);
 
             //OAuthWebSecurity.RegisterFacebookClient(
             //    appId: "",
