@@ -12,13 +12,16 @@ namespace MATechTaxWebSite.Controllers
 {
     public class CheckFaqController : ApiController
     {
+        static string LastModified = null;
+
         // GET api/checkfaq
         public HttpResponseMessage Get()
         {
             string httpLastModified = String.Empty;
             try
             {
-                httpLastModified = CheckFaq();
+                httpLastModified = CaptureRecentFaqChanges();
+                LastModified = httpLastModified;
             }
             catch (Exception ex)
             {
@@ -28,7 +31,7 @@ namespace MATechTaxWebSite.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, httpLastModified);
         }
 
-        private string CheckFaq()
+        private string CaptureRecentFaqChanges()
         {
             var httpLastModified = String.Empty;
             var client = new HttpClient();
@@ -94,7 +97,7 @@ namespace MATechTaxWebSite.Controllers
                 var snapshot = blob.CreateSnapshot();
                 WriteBlob(blobUri, thumbprint, contents);
 
-                TweetThatFaqUpdated();
+                TweetThatFaqWasUpdated();
                 return true;
             }
             else
@@ -105,7 +108,7 @@ namespace MATechTaxWebSite.Controllers
             }
         }
 
-        static void TweetThatFaqUpdated()
+        static void TweetThatFaqWasUpdated()
         {
             var twitterOAuthConsumerKey = ConfigurationManager.AppSettings["TwitterOAuthConsumerKey"];
             var twitterOAuthConsumerSecret = ConfigurationManager.AppSettings["TwitterOAuthConsumerSecret"];
@@ -130,12 +133,12 @@ namespace MATechTaxWebSite.Controllers
             var memstream = new MemoryStream(contents);
             blob.UploadFromStream(memstream);
             blob.Metadata["thumbprint"] = thumbprint;
+            if (!String.IsNullOrEmpty(LastModified)) 
+                blob.Metadata["LastModified"] = LastModified;
             blob.SetMetadata();
             blob.Properties.ContentType = ConfigurationManager.AppSettings["BlobDestinationMimeType"];
             blob.SetProperties();
 #endif
-
-
 
             /*
          var uri = Microsoft.WindowsAzure.StorageClient.Protocol.BlobRequest.Get
