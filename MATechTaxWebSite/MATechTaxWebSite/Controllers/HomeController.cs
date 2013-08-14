@@ -40,6 +40,7 @@ namespace MATechTaxWebSite.Controllers
             FetchMeta(blob);
 
             var blobOptions = Microsoft.WindowsAzure.Storage.Blob.BlobListingDetails.Snapshots;
+#if false
             foreach (var blobItem in blob.Container.ListBlobs(prefix: null, useFlatBlobListing: true, blobListingDetails: blobOptions))
             {
                 var lastModified = String.Empty;
@@ -50,6 +51,7 @@ namespace MATechTaxWebSite.Controllers
                     Url = blobItem.Uri.AbsoluteUri
                 });
             }
+#endif
 
             return faqSnapshots;
         }
