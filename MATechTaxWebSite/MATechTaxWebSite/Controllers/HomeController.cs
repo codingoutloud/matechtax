@@ -55,9 +55,9 @@ namespace MATechTaxWebSite.Controllers
                 {
                     Thumbprint = thumbprint,
                     LastModified = lastModifiedText,
-                    WhenCaptured = blobItem.SnapshotTime.ToString(),
+                    WhenCaptured = blobItem.SnapshotTime.ToString() + " UTC",
                     Url = blobItem.SnapshotQualifiedUri.AbsoluteUri,
-                    Comment = blobItem.IsSnapshot ? comment : "(Latest/Current Version)"
+                    Comment = blobItem.IsSnapshot ? comment : "(Most Current Version)"
                 });
             }
             return faqSnapshots;
