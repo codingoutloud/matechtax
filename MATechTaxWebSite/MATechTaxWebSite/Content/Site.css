@@ -528,11 +528,14 @@ input[type="checkbox"].input-validation-error {
 /* tables
 ----------------------------------------------------------*/
 table {
+/*
     border-collapse: collapse;
     border-spacing: 0;
+*/
     padding: 1px;
     margin-top: 0.75em;
-    border: 1px solid blue;
+    border: 2px solid blue;
+    border-right: 5px solid skyblue;
 }
 
 th {
