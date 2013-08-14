@@ -40,15 +40,15 @@ namespace MATechTaxWebSite.Controllers
 
             FetchMeta(blob);
 
-            var blobOptions = Microsoft.WindowsAzure.Storage.Blob.BlobListingDetails.Snapshots;
-            foreach (var blobItem in blob.Container.ListBlobs(prefix: null, useFlatBlobListing: true, blobListingDetails: blobOptions))
+            var blobOptions = Microsoft.WindowsAzure.Storage.Blob.BlobListingDetails.Snapshots; // | Microsoft.WindowsAzure.Storage.Blob.BlobListingDetails.Metadata;
+            foreach (CloudBlockBlob blobItem in blob.Container.ListBlobs(prefix: null, useFlatBlobListing: true, blobListingDetails: blobOptions))
             {
 #if true
                 var lastModified = String.Empty;
                 var hasLastModified = blob.Metadata.TryGetValue("LastModified", out lastModified);
                 faqSnapshots.Add(new BlobSnapshot()
                 {
-                    LastModified = hasLastModified ? lastModified : "<not captured>",
+                    LastModified = hasLastModified ? lastModified : "<original date not recorded>",
                     Url = blob.SnapshotQualifiedUri.AbsoluteUri,
                     Comment = blobItem.Uri.AbsoluteUri
                 });
