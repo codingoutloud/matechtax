@@ -535,7 +535,10 @@ table {
     padding: 1px;
     margin-top: 0.75em;
     border: 2px solid blue;
+/*
     border-right: 5px solid skyblue;
+*/
+    outline: thin solid skyblue;
 }
 
 th {
