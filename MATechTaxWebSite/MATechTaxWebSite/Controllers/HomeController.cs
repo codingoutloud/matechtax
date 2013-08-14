@@ -37,8 +37,8 @@ namespace MATechTaxWebSite.Controllers
             var valetKeyUrl = ConfigurationManager.AppSettings["BlobValetKeyUrl"];
             var destinationUrl = ConfigurationManager.AppSettings["BlobDestinationUrl"];
             var blob = ValetKeyPattern.AzureStorage.BlobContainerValet.GetCloudBlockBlob(valetKeyUrl, new Uri(destinationUrl));
-
             FetchMeta(blob);
+            var blobLastModified = blob.Metadata("LastModified");
 
             var blobOptions = Microsoft.WindowsAzure.Storage.Blob.BlobListingDetails.Snapshots; // | Microsoft.WindowsAzure.Storage.Blob.BlobListingDetails.Metadata;
             foreach (CloudBlockBlob blobItem in blob.Container.ListBlobs(prefix: null, useFlatBlobListing: true, blobListingDetails: blobOptions))
@@ -52,7 +52,7 @@ namespace MATechTaxWebSite.Controllers
                     Thumbprint = thumbprint,
                     LastModified = hasLastModified ? lastModified : "<original post date not captured>",
                     Url = blobItem.SnapshotQualifiedUri.AbsoluteUri,
-                    Comment = blobItem.IsSnapshot ? blobItem.SnapshotTime.Value.ToString() : " (Current)"
+                    Comment = blobItem.IsSnapshot ? blobItem.SnapshotTime.Value.ToString() : blobLastModified
                 });
             }
             return faqSnapshots;
