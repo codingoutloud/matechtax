@@ -47,7 +47,7 @@ namespace MATechTaxWebSite.Controllers
                 var thumbprint = String.Empty;
                 var hasLastModified = blobItem.Metadata.TryGetValue("LastModified", out lastModified);
                 var hasThumbprint = blobItem.Metadata.TryGetValue("thumbprint", out thumbprint);
-                var lastModifiedText = hasLastModified ? lastModified : "<original post date not captured>";
+                var lastModifiedText = hasLastModified ? lastModified : "{date posted unknown}";
                 if (!blobItem.IsSnapshot) lastModifiedText = blobLastModified;
                 faqSnapshots.Add(new BlobSnapshot()
                 {
