@@ -26,7 +26,6 @@ namespace MATechTaxWebSite.Controllers
                 ViewBag.Message = ex.ToString() + " -- {BASE} -> (((" +
                         ex.GetBaseException().ToString() +
                         ")))"
-                        + String.Format("<b>{0}</b>", ConfigurationManager.AppSettings["BlobValetKeyUrl"])
                         ;
                 return View(new List<BlobSnapshot>());
             }
@@ -50,8 +49,8 @@ namespace MATechTaxWebSite.Controllers
                 faqSnapshots.Add(new BlobSnapshot()
                 {
                     LastModified = hasLastModified ? lastModified : "<not captured>",
-                    Url = blobItem.Uri.AbsoluteUri,
-                    Comment = ConfigurationManager.AppSettings["BlobValetKeyUrl"]
+                    Url = blob.SnapshotQualifiedUri.AbsoluteUri,
+                    Comment = blobItem.Uri.AbsoluteUri
                 });
 #endif
             }
