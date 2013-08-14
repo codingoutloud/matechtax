@@ -50,7 +50,7 @@ namespace MATechTaxWebSite.Controllers
                 faqSnapshots.Add(new BlobSnapshot()
                 {
                     Thumbprint = thumbprint,
-                    LastModified = hasLastModified ? lastModified : "<original post date not recorded>",
+                    LastModified = hasLastModified ? lastModified : "<original post date not captured>",
                     Url = blobItem.SnapshotQualifiedUri.AbsoluteUri,
                     Comment = blobItem.IsSnapshot ? blobItem.SnapshotTime.Value.ToString() : " (Current)"
                 });
