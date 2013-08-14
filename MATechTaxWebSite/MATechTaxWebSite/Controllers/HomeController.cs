@@ -53,6 +53,7 @@ namespace MATechTaxWebSite.Controllers
                 {
                     Thumbprint = thumbprint,
                     LastModified = lastModifiedText,
+                    WhenCaptured = blobItem.SnapshotTime.ToString(),
                     Url = blobItem.SnapshotQualifiedUri.AbsoluteUri,
                     Comment = blobItem.IsSnapshot ? blobItem.SnapshotTime.Value.ToString() : " (Latest/Current)"
                 });

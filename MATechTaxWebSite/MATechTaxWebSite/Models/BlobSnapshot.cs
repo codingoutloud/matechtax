@@ -10,6 +10,7 @@ namespace MATechTaxWebSite.Models
         public string Thumbprint { get; set; }
         public string Url { get; set; }
         public string LastModified { get; set; } // may be null
+        public string WhenCaptured { get; set; }
         public string Comment { get; set; }
     }
 }
