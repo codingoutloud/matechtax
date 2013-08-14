@@ -91,6 +91,7 @@ namespace MATechTaxWebSite.Controllers
             if (oldthumbprint != thumbprint)
             {
                 var snapshot = blob.CreateSnapshot();
+                WriteBlob(blobUri, thumbprint, contents, httpLastModified);
                 TweetThatFaqWasUpdated();
                 return true;
             }
