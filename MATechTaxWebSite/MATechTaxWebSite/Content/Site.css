@@ -532,19 +532,30 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 */
+    border-collapse: collapse;
+    border-spacing: 0;
     padding: 1px;
     margin-top: 0.75em;
     border: 2px solid blue;
 /*
     border-right: 5px solid skyblue;
-*/
     outline: thin solid skyblue;
+    border-color: forestgreen;
+    outline: 5px solid skyblue;
+*/
+    column-rule: 5px solid red;
 }
+        td, th {
+        }
 
 th {
     font-size: 1.2em;
     text-align: left;
+/*
     border: none 0px;
+    border-bottom: 1px solid black !important;
+*/
+    border: solid skyblue;
     padding-left: 0;
 }
 
@@ -586,7 +597,11 @@ th {
 
 td {
     padding: 0.25em 2em 0.25em 0em;
+/*
     border: 0 none;
+    border-bottom: 1px solid black !important;
+*/
+    border: solid skyblue;
 }
 
 tr.pager td {
