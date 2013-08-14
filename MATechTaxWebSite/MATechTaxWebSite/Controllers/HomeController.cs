@@ -45,8 +45,10 @@ namespace MATechTaxWebSite.Controllers
             {
                 var lastModified = String.Empty;
                 var thumbprint = String.Empty;
+                var comment = String.Empty;
                 var hasLastModified = blobItem.Metadata.TryGetValue("LastModified", out lastModified);
                 var hasThumbprint = blobItem.Metadata.TryGetValue("thumbprint", out thumbprint);
+                var hasComment = blobItem.Metadata.TryGetValue("comment", out comment);
                 var lastModifiedText = hasLastModified ? lastModified : "{unknown}";
                 if (!blobItem.IsSnapshot) lastModifiedText = blobLastModified;
                 faqSnapshots.Add(new BlobSnapshot()
@@ -55,7 +57,7 @@ namespace MATechTaxWebSite.Controllers
                     LastModified = lastModifiedText,
                     WhenCaptured = blobItem.SnapshotTime.ToString(),
                     Url = blobItem.SnapshotQualifiedUri.AbsoluteUri,
-                    Comment = blobItem.IsSnapshot ? blobItem.SnapshotTime.Value.ToString() : " (Latest/Current)"
+                    Comment = blobItem.IsSnapshot ? comment : "(Latest/Current Version)"
                 });
             }
             return faqSnapshots;
