@@ -47,12 +47,14 @@ namespace MATechTaxWebSite.Controllers
                 var thumbprint = String.Empty;
                 var hasLastModified = blobItem.Metadata.TryGetValue("LastModified", out lastModified);
                 var hasThumbprint = blobItem.Metadata.TryGetValue("thumbprint", out thumbprint);
+                var lastModifiedText = hasLastModified ? lastModified : "<original post date not captured>";
+                if (!blobItem.IsSnapshot) lastModifiedText = blobLastModified;
                 faqSnapshots.Add(new BlobSnapshot()
                 {
                     Thumbprint = thumbprint,
-                    LastModified = hasLastModified ? lastModified : "<original post date not captured>",
+                    LastModified = lastModifiedText,
                     Url = blobItem.SnapshotQualifiedUri.AbsoluteUri,
-                    Comment = blobItem.IsSnapshot ? blobItem.SnapshotTime.Value.ToString() : blobLastModified
+                    Comment = blobItem.IsSnapshot ? blobItem.SnapshotTime.Value.ToString() : " (Latest/Current)"
                 });
             }
             return faqSnapshots;
