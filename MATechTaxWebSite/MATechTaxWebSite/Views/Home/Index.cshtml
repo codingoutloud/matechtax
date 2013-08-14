@@ -19,19 +19,17 @@
 <a href="@ViewBag.FaqUrl">LATEST Sofware Service Sales Tax FAQ</a>
 
 <h3>DOR FAQ HISTORY (Partial)</h3>
-<ol class="round">
-    @foreach (var snap in Model)
-    {
-    <table>
+<table border="1">
     <tr>
         <th>Thumbprint</th><th>URL</th><th>Last Update (Approx)</th><th>Date Captured</th><th>Comment</th>
     </tr>
+    @foreach (var snap in Model)
+    {
     <tr>
         <td>@snap.Thumbprint</td><td><a href="@snap.Url">@snap.Url</a></td><td>@snap.LastModified</td><td>@snap.WhenCaptured</td><td><small>@snap.Comment</small></td>
     </tr>
-    </table>
     }
-</ol>
+</table>
 
 <section class="contact">
     <header>
