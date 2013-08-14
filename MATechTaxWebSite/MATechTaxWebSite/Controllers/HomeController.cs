@@ -50,7 +50,7 @@ namespace MATechTaxWebSite.Controllers
                 {
                     LastModified = hasLastModified ? lastModified : "<original post date not recorded>",
                     Url = blobItem.SnapshotQualifiedUri.AbsoluteUri,
-                    Comment = blobItem.SnapshotTime.HasValue ? blobItem.SnapshotTime.Value.ToString() ? " (no snap date)"
+//                    Comment = blobItem.SnapshotTime.HasValue ? blobItem.SnapshotTime.Value.ToString() ? " (no snap date)"
                 });
 #endif
             }
