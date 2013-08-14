@@ -16,9 +16,18 @@ namespace MATechTaxWebSite.Controllers
         {
             ViewBag.Message = "MA Tech Tax";
 
-            var faqSnapshots = GetFaqSnapshots();
-
-            return View(faqSnapshots);
+            try
+            {
+                var faqSnapshots = GetFaqSnapshots();
+                return View(faqSnapshots);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.ToString() + " -- {BASE} -> (((" +
+                        ex.GetBaseException().ToString() +
+                        ")))";
+                return View(new List<BlobSnapshot>());
+            }
         }
 
         private List<BlobSnapshot> GetFaqSnapshots()
