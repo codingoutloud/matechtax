@@ -48,9 +48,9 @@ namespace MATechTaxWebSite.Controllers
                 var hasLastModified = blob.Metadata.TryGetValue("LastModified", out lastModified);
                 faqSnapshots.Add(new BlobSnapshot()
                 {
-                    LastModified = hasLastModified ? lastModified : "<original date not recorded>",
-                    Url = blob.SnapshotQualifiedUri.AbsoluteUri,
-                    Comment = blobItem.Uri.AbsoluteUri
+                    LastModified = hasLastModified ? lastModified : "<original post date not recorded>",
+                    Url = blobItem.SnapshotQualifiedUri.AbsoluteUri,
+                    Comment = blobItem.SnapshotTime.Value.ToString()
                 });
 #endif
             }
