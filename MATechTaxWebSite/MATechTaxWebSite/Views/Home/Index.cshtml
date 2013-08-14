@@ -22,9 +22,14 @@
 <ol class="round">
     @foreach (var snap in Model)
     {
-    <li>
-        <h4><small><small>[@snap.Thumbprint]</small></small> <a href="@snap.Url">@snap.LastModified</a> <small>@snap.Comment</small></h4>
-    </li>
+    <table>
+    <tr>
+        <th>Thumbprint</th><th>URL (Last Modified)</th><th>Comment</th>
+    </tr>
+    <tr>
+        <td>@snap.Thumbprint</td><td><a href="@snap.Url">@snap.LastModified</a></td><td><small>@snap.Comment</small></td>
+    </tr>
+    </table>
     }
 </ol>
 
