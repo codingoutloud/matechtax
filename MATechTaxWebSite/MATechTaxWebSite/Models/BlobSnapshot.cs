@@ -9,5 +9,6 @@ namespace MATechTaxWebSite.Models
     {
         public string Url { get; set; }
         public string LastModified { get; set; } // may be null
+        public string Comment { get; set; }
     }
 }
