@@ -23,7 +23,9 @@ namespace MATechTaxWebSite.Controllers
             catch (Exception ex)
             {
                 var foo = ex;
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.ToString());
+                return Request.CreateResponse(HttpStatusCode.OK, ex.ToString() + " -- {BASE} -> (((" +
+                    ex.GetBaseException().ToString() +
+                    ")))");
             }
         }
 
