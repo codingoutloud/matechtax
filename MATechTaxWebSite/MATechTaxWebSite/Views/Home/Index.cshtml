@@ -23,7 +23,7 @@
     @foreach (var snap in Model)
     {
     <li>
-        <h4><a href="@snap.Url">@snap.LastModified</a></h4>
+        <h4><a href="@snap.Url">@snap.LastModified</a> <small>@snap.Comment</small></h4>
     </li>
     }
 </ol>

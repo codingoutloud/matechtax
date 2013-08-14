@@ -25,7 +25,9 @@ namespace MATechTaxWebSite.Controllers
             {
                 ViewBag.Message = ex.ToString() + " -- {BASE} -> (((" +
                         ex.GetBaseException().ToString() +
-                        ")))";
+                        ")))"
+                        + String.Format("<b>{0}</b>", ConfigurationManager.AppSettings["BlobValetKeyUrl"])
+                        ;
                 return View(new List<BlobSnapshot>());
             }
         }
