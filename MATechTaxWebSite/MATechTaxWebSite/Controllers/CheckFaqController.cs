@@ -63,14 +63,10 @@ namespace MATechTaxWebSite.Controllers
 
         static bool WriteToBlobIfChanged(Uri blobUri, string thumbprint, byte[] contents, string httpLastModified)
         {
-     //       Console.Write("[thumbprint = {0} ... ", thumbprint);
-
             var valetKeyUrl = ConfigurationManager.AppSettings["BlobValetKeyUrl"];
             var destinationUrl = ConfigurationManager.AppSettings["BlobDestinationUrl"];
 
-
             var blob = BlobContainerValet.GetCloudBlockBlob(valetKeyUrl, new Uri(destinationUrl));
-
             try
             {
                 blob.FetchAttributes();
@@ -94,18 +90,12 @@ namespace MATechTaxWebSite.Controllers
 
             if (oldthumbprint != thumbprint)
             {
-                Console.Write("Change detected: {0}... ", DateTime.Now.ToLongTimeString());
-
                 var snapshot = blob.CreateSnapshot();
-                WriteBlob(blobUri, thumbprint, contents, httpLastModified);
-
                 TweetThatFaqWasUpdated();
                 return true;
             }
             else
             {
-                Console.WriteLine("No change at {0}...", DateTime.Now.ToLongTimeString());
-
                 return false;
             }
         }
@@ -125,10 +115,6 @@ namespace MATechTaxWebSite.Controllers
 
         static void WriteBlob(Uri blobUri, string thumbprint, byte[] contents, string httpLastModified)
         {
-#if false
-         var blob = new CloudBlockBlob(blobUri);
-         BlobContainerValet.UploadToBlobContainer(blobUri.AbsoluteUri, path);
-#else
             var valetKeyUrl = ConfigurationManager.AppSettings["BlobValetKeyUrl"];
             var destinationUrl = ConfigurationManager.AppSettings["BlobDestinationUrl"];
             var blob = ValetKeyPattern.AzureStorage.BlobContainerValet.GetCloudBlockBlob(valetKeyUrl, new Uri(destinationUrl));
@@ -140,15 +126,6 @@ namespace MATechTaxWebSite.Controllers
             blob.SetMetadata();
             blob.Properties.ContentType = ConfigurationManager.AppSettings["BlobDestinationMimeType"];
             blob.SetProperties();
-#endif
-
-            /*
-         var uri = Microsoft.WindowsAzure.StorageClient.Protocol.BlobRequest.Get
-            (snapshot.Uri,
-             0,
-             snapshot.SnapshotTime.Value,
-             null).Address.AbsoluteUri;
-          */
         }
     }
 }

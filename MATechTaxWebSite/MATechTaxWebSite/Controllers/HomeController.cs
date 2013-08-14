@@ -44,12 +44,15 @@ namespace MATechTaxWebSite.Controllers
             foreach (CloudBlockBlob blobItem in blob.Container.ListBlobs(prefix: null, useFlatBlobListing: true, blobListingDetails: blobOptions))
             {
                 var lastModified = String.Empty;
+                var thumbprint = String.Empty;
                 var hasLastModified = blob.Metadata.TryGetValue("LastModified", out lastModified);
+                var hasThumbprint = blob.Metadata.TryGetValue("Thumbprint", out thumbprint);
                 faqSnapshots.Add(new BlobSnapshot()
                 {
+                    Thumbprint = thumbprint,
                     LastModified = hasLastModified ? lastModified : "<original post date not recorded>",
                     Url = blobItem.SnapshotQualifiedUri.AbsoluteUri,
-                    Comment = blobItem.IsSnapshot ? blobItem.SnapshotTime.Value.ToString() : " (Latest)"
+                    Comment = blobItem.IsSnapshot ? blobItem.SnapshotTime.Value.ToString() : " (Current)"
                 });
             }
             return faqSnapshots;
